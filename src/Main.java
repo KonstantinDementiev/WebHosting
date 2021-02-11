@@ -1,25 +1,26 @@
 import inputdata.ConsoleDataReader;
-import inputdata.DataReader;
+import inputdata.DataReaderImpl;
+import inputdata.RandomDataLoader;
 import parsers.DateParser;
 import parsers.QueryDataParser;
 import parsers.TimeLineDataParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Main {
+public class Main<T extends DataReaderImpl> {
 
-    private final DataReader dataReader;
+    private final T dataReader;
     private final TimeLineDataParser timeLineDataParser;
     private final QueryDataParser queryDataParser;
     private final DateParser dateParser;
     private final TimeLineFinder timeLineFinder;
-
     private final List<LineRecord> timeLineDB = new ArrayList<>();
     private final List<String> resultMinutesList = new ArrayList<>();
 
     public Main(
-            DataReader dataReader,
+            T dataReader,
             TimeLineDataParser timeLineDataParser,
             QueryDataParser queryDataParser,
             DateParser dateParser,
@@ -33,14 +34,28 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main main = new Main(
-                new ConsoleDataReader(),
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Please, enter data input type: 'a' - AUTO, 'm' - MANUAL:");
+            String inputType = scanner.nextLine();
+            choiceInputType(inputType).run();
+        }
+    }
+
+    private static Main<? extends DataReaderImpl> choiceInputType(String type) {
+        return switch (type) {
+            case "m" -> createNewMainInstance(new ConsoleDataReader());
+            case "a" -> createNewMainInstance(new RandomDataLoader());
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private static <T extends DataReaderImpl> Main<T> createNewMainInstance(T linesResource) {
+        return new Main<>(
+                linesResource,
                 new TimeLineDataParser(),
                 new QueryDataParser(),
                 new DateParser(),
-                new TimeLineFinder()
-        );
-        main.run();
+                new TimeLineFinder());
     }
 
     private void run() {

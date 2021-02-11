@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleDataReader implements DataReader {
+public class ConsoleDataReader extends DataReaderImpl {
 
-    @Override
     public List<String> inputData() {
         List<String> inputLinesList = new ArrayList<>();
         System.out.println("Enter data:");
