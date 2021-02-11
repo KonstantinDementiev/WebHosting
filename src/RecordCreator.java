@@ -7,7 +7,7 @@ public class RecordCreator<T extends RecordDataParser> {
     private final T recordLineParser;
     private final DateParser dateParser;
 
-    public RecordCreator(String inputLine, T recordLineParser, DateParser dateParser) {
+    RecordCreator(String inputLine, T recordLineParser, DateParser dateParser) {
         this.inputLine = inputLine;
         this.recordLineParser = recordLineParser;
         this.dateParser = dateParser;

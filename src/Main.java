@@ -63,7 +63,7 @@ public class Main<T extends DataReaderImpl> {
         for (String dataLine : inputTimeLines) {
             lineHandling(dataLine);
         }
-        printResult();
+        resultMinutesList.forEach(System.out::println);
     }
 
     private void lineHandling(String dataLine) {
@@ -93,12 +93,6 @@ public class Main<T extends DataReaderImpl> {
     private LineRecord createQueryLine(String inputLine) {
         return new RecordCreator<>(inputLine, queryDataParser, dateParser).
                 createNewTimeLine();
-    }
-
-    private void printResult() {
-        for (String line : resultMinutesList) {
-            System.out.println(line);
-        }
     }
 
 }

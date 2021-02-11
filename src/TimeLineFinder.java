@@ -3,25 +3,14 @@ import java.util.List;
 public class TimeLineFinder {
 
     int calculateAverageWaitingMinutes(List<LineRecord> inputTimeLines, LineRecord queryToFind) {
-        int sumMinutes = 0;
-        int count = 0;
-        for (LineRecord currentLine : inputTimeLines) {
-            if (compareServiceId(currentLine, queryToFind)) {
-                if (compareQuestionTypeId(currentLine, queryToFind)) {
-                    if (compareAnswerType(currentLine, queryToFind)) {
-                        if (compareDate(currentLine, queryToFind)) {
-                            sumMinutes += currentLine.lineTime();
-                            count++;
-                        }
-                    }
-                }
-            }
-        }
-        if (count == 0) {
-            return 0;
-        } else {
-            return sumMinutes / count;
-        }
+        double average = inputTimeLines.stream()
+                .filter(lineRecord -> compareServiceId(lineRecord, queryToFind))
+                .filter(lineRecord -> compareQuestionTypeId(lineRecord, queryToFind))
+                .filter(lineRecord -> compareAnswerType(lineRecord, queryToFind))
+                .filter(lineRecord -> compareDate(lineRecord, queryToFind))
+                .mapToInt(LineRecord::lineTime)
+                .average().orElse(0);
+        return (int) Math.round(average);
     }
 
     private boolean compareServiceId(LineRecord currentLine, LineRecord queryToFind) {
